@@ -31,11 +31,11 @@ If you use this code or the EMORe framework in your research, please cite our pa
 @article{Arshad2025_EMORe,
   author    = {Arshad, Syed M. and Potter, Lee C. and Chen, Chong and Subramanian, Preethi C. and Liu, Yingmin and Crabtree, Christopher and Lei, Xuan and Varghese, Juliet and Tong, Matthew S. and Ahmad, Rizwan},
   title     = {{EMORe}: Motion-Robust {5D} {MRI} Reconstruction via Expectation-Maximization–Guided Binning Correction and Outlier Rejection},
-  journal   = {IEEE Transactions on Medical Imaging},
+  journal   = {},
   year      = {2025},
   volume    = {},
   number    = {},
   pages     = {},
   doi       = {},
-  publisher = {IEEE}
+  publisher = {}
 }
