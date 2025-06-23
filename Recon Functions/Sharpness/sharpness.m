@@ -1,0 +1,265 @@
+function [av,mn,mx,md,sd,Im,slc_frame,E_bs] = sharpness(I,slc_frame,E_bs,disp_val,title_str)
+if nargin < 3
+    disp_val = 0;
+end
+% Detect available screens
+screenPositions = get(0, 'MonitorPositions');
+numScreens = size(screenPositions, 1);
+% If multiple screens exist, move figure to the second screen
+if numScreens > 1
+    selected_screen = screenPositions(2, :); % Get second screen position
+else
+    selected_screen = screenPositions(1, :); % Get second screen position
+end
+    other_screen = screenPositions(1, :); % Get second screen position
+
+
+scale = 1;
+
+
+maxSlice = size(I, 3); % Get the total number of slices
+maxFrame = size(I, 4); % Get the total number of slices
+if nargin < 2 || isempty(slc_frame)
+    figure(1); % Create figure window
+    set(gcf, 'OuterPosition', [selected_screen(1)/scale, selected_screen(2)/scale, selected_screen(3)/scale, selected_screen(4)/scale]);
+
+    while true  % Keep running until a valid slice is selected
+        % Loop through all slices for visualization
+        for slice = 1:maxSlice
+            imagesc(I(:, :, slice, 11,1));
+            colormap("gray");
+            title("Slice: " + slice);
+            pause; % Wait for user input (press any key to continue)
+        end
+    
+        % Prompt user for input
+        userInput = input(sprintf('Enter a slice number (1-%d) to select, or 0 to view again: ', maxSlice), 's');
+    
+        % Convert input to number
+        slc_frame(1) = str2double(userInput);
+    
+        % Validate input
+        if isnan(slc_frame(1)) || slc_frame(1) < 0 || slc_frame(1) > maxSlice
+            disp('Invalid input. Please enter a number between 0 and max slice value.');
+            continue; % Ask for input again
+        end
+    
+        if slc_frame(1) == 0
+            disp('Restarting slice visualization...');
+            continue; % Restart visualization loop
+        else
+            break; % Exit loop
+        end
+    end
+    figure(2);
+    while true  % Keep running until a valid slice is selected
+        % Loop through all slices for visualization
+        for frame = 1:maxFrame
+            imagesc(I(:, :, slc_frame(1), frame,1));
+            colormap("gray");
+            title("Slice: "+slc_frame(1)+" | Frame: " + frame);
+            pause; % Wait for user input (press any key to continue)
+        end
+    
+        % Prompt user for input
+        userInput = input(sprintf('Enter a frame number (1-%d) to select, or 0 to view again: ', maxFrame), 's');
+    
+        % Convert input to number
+        slc_frame(2) = str2double(userInput);
+    
+        % Validate input
+        if isnan(slc_frame(2)) || slc_frame(2) < 0 || slc_frame(2) > maxFrame
+            disp('Invalid input. Please enter a number between 0 and max frame value.');
+            continue; % Ask for input again
+        end
+    
+        if slc_frame(2) == 0
+            disp('Restarting frame visualization...');
+            continue; % Restart visualization loop
+        else
+            fprintf('You selected slice %d | selected frame %d.\n', slc_frame(1),slc_frame(2));
+            break; % Exit loop
+        end
+    end
+end
+
+% figure(2); % Open new figure for selected frame
+% subplot(2,2,1)
+% imagesc(I(:, :, slc_frame(1), slc_frame(2),1)); colormap("gray");title("Resp 1")
+% subplot(2,2,2)
+% imagesc(I(:, :, slc_frame(1), slc_frame(2),2)); colormap("gray");title("Resp 2")
+% subplot(2,2,3)
+% imagesc(I(:, :, slc_frame(1), slc_frame(2),3)); colormap("gray");title("Resp 3")
+% subplot(2,2,4)
+% imagesc(I(:, :, slc_frame(1), slc_frame(2),4)); colormap("gray");title("Resp 4")
+% 
+% sgtitle(sprintf('Selected Slice: %d | Selected Frame: %d', slc_frame(1),slc_frame(2)));
+% set(gcf, 'OuterPosition', [other_screen(1)/scale, other_screen(2)/scale, other_screen(3)/scale, other_screen(4)/scale]);
+
+I = double(squeeze(I(:,:,slc_frame(1),slc_frame(2),:)));
+I = 10*I/max(I(:));
+
+%% User defined parameters
+p.e_sig   = 1.7; % Width of smoothing filter for edge detection              % Imp
+p.e_th    = 0.05; % Thresholding for edge detection
+p.e_tl    = p.e_th*0.4;
+p.c_L     = 3; % Length used to compute curvature for normals (in option B only)
+p.e_L     = p.c_L+1; % Discard all edges below length e_L
+p.n_L     = 7; % Length (in pixels) of lines normal to the selected edges % Imp
+p.n_s     = 8*p.n_L+1; % Number of samples along each normal line; keep it odd
+p.hist    = 'no'; % Histogram tweaking for the image;
+p.h_dc    = 0.02; % Histogram parameters (dc)
+p.h_ln    = 1024; % Number of bins in the histogram
+p.h_sig   = p.h_ln/3; % std of histogram
+p.i_fn    = 1; % Frame number to be considered for analysis
+p.i_ref   = [1]; % The image index used to detect edges; use a number or 'all' for averaged
+p.AngR    = [-90, 90]*pi/180; % 
+% p.AngR    = [-90, -72; 72, 90]*pi/180; % 
+p.sig     = 1e-3*0; % Noise added to the image
+p.n_f     = 1; % 1/std of profile blurring filter; smaller number=more blurring
+p.trim    = 'one'; % Method of profile truncation, 'one', 'two', 'three', 'four'
+p.typ     = 'cf';    % Sharpness measurement method, '1090', 'grad', 'cf'
+p.alph    = 0.01; % Alpha for t-testing
+
+
+St = cell(size(I,3),1);
+if nargin < 3 || isempty(E_bs)
+E_bs = zeros(size(I));
+do_Ebs = 1;
+else
+do_Ebs = 0;
+  
+end
+for resp = 1: size(I,3)
+%% Histogram Tweaking
+hgram=hshape(p);
+Ic=I(:,:,resp);
+if strcmp(p.hist,'yes'), Ic=histeq(Ic/max(Ic(:)),hgram); end
+
+% for i=1:size(I,3)
+%     I(:,:,i)=histeq(I(:,:,i)/max(max(I(:,:,i))),hgram);
+% end
+
+%% Edge Detection
+E = edge(Ic,'canny',[p.e_tl p.e_th],p.e_sig);
+
+
+%% Remove branches
+E_b = brch_prune(E,'A');
+E_bl = len_thresh(E_b,p.e_L);
+
+
+%% Plotting
+
+if(do_Ebs)
+
+% figure(3);  subplot(221); imagesc(Ic); colormap(gray); axis('image','off'); title('composite image');
+%             subplot(222); imagesc(E_bl); colormap(gray); axis('image','off'); title('edges');
+%             set(gcf, 'OuterPosition', [other_screen(1)/scale, other_screen(2)/scale, other_screen(3)/scale, other_screen(4)/scale]);
+% sgtitle("Resp: "+resp);
+figri = figure(3);  
+set(figri, 'OuterPosition', [selected_screen(1)/scale, selected_screen(2)/scale, selected_screen(3)/scale, selected_screen(4)/scale]);
+imagesc(E_bl); colormap(gray); axis('image','off'); title("using mouse, select appropriate edges for Resp "+resp);
+E_bs(:,:,resp)=bwselect(E_bl,8);
+
+%E_bs(:,:,resp)=bwselect(E_bl, x_boundary, y_boundary, 8);
+% figure(3);  subplot(223); imagesc(E_bs(:,:,resp)); colormap(gray); axis('image','off'); title('user selected edges');
+% %             subplot(224); imagesc(slct_e); colormap(gray); axis('square','off');
+% set(gcf, 'OuterPosition', [selected_screen(1)/scale, selected_screen(2)/scale, selected_screen(3)/scale, selected_screen(4)/scale]);
+end
+
+
+%% Morphological filtering
+E_bsm   = morph_mask(E).*E_bs(:,:,resp);
+% E_bsm = len_thresh(E_bsm,p);
+
+
+%% Remove pixels close to the edge
+E_bsm = rect_mask(size(Ic),ceil(p.n_L/2+1)).*E_bsm;
+E_bsm = len_thresh(E_bsm,p.e_L);
+
+
+%% Sorting Edge Indices
+St{resp} = edge_sort(E_bsm,p);
+
+
+%% Find normals to local curvature
+St{resp} = edge_norm(St{resp},Ic,p,'A');
+E_bsms=edge_final(St{resp}, E_bsm); 
+% figure(3);  subplot(224); imagesc(E_bsms); colormap(gray); axis('image','off'); title('edges for sharpness measurement');
+
+end
+if(do_Ebs)
+    figure(4); % Open new figure for selected frame
+    subplot(2,2,1)
+    imagesc(E_bs(:,:,1)); colormap("gray");title("Resp 1")
+    subplot(2,2,2)
+    imagesc(E_bs(:,:,2)); colormap("gray");title("Resp 2")
+    subplot(2,2,3)
+    imagesc(E_bs(:,:,3)); colormap("gray");title("Resp 3")
+    subplot(2,2,4)
+    imagesc(E_bs(:,:,4)); colormap("gray");title("Resp 4")
+    pause;
+end
+
+%% Curve fitting
+av=zeros(size(I,3),1);
+mx=zeros(size(I,3),1);
+mn=zeros(size(I,3),1);
+H=zeros(size(I,3), size(I,3)); % hypothesis results
+pval=zeros(size(I,3), size(I,3)); % p values
+for k=1:size(I,3)
+    %tic
+    % Read Image along the lines
+    Im(k).Data = read_int(St{k},I(:,:,k)); % ???? index
+
+
+    % Curve fitting
+    Im(k).Data = sigmoid_fit(Im(k).Data,p);
+    Im(k).Sh=[];
+    Im(k).IntS=[];
+    Im(k).Fit=[];
+    for i=1:size(St{k},1)
+        if ~isempty(Im(k).Data(i).Param)
+%             Im(k).Sh=[Im(k).Sh;Im(k).Data(i).Param];
+            Im(k).Sh=[Im(k).Sh;Im(k).Data(i).Param(:,1)]; %??
+            Im(k).IntS=[Im(k).IntS;Im(k).Data(i).IntS];
+            Im(k).Fit=[Im(k).Fit;Im(k).Data(i).Fit];
+        end
+    end 
+%     if k>1
+        for g=1:1:k
+%             [H(g,k),pval(g,k)]=ttest2(Im(g).Sh, Im(k).Sh,p.alph,'both','unequal'); % t-test
+            [pval(g,k),H(g,k)]=ranksum(Im(g).Sh, Im(k).Sh, 'alpha',p.alph); % Wilcoxon ranksum
+
+        end
+%     end
+    md(k) = median(Im(k).Sh);
+    av(k) = mean(Im(k).Sh);
+    sd(k) = std(Im(k).Sh);
+    mn(k) = min(Im(k).Sh);
+    mx(k) = max(Im(k).Sh);
+    %{k, toc}
+end
+H=(H+H')./(eye(size(H,1))+ones(size(H)));
+pval=(pval+pval')./(eye(size(H,1))+ones(size(H)));
+
+if(disp_val)
+% Arrange the data into a matrix where each row corresponds to a parameter 
+% and each column corresponds to a respiratory phase.
+data = [ av(:)';md(:)'; sd(:)'; mn(:)'; mx(:)'];
+
+% Create a table with parameter names as rows and respiratory phase names as columns
+T = array2table(data, ...
+    'RowNames', { 'Average','Median', 'Std', 'Min', 'Max'}, ...
+    'VariableNames', {'Resp_1', 'Resp_2', 'Resp_3', 'Resp_4'});
+
+% Display the table in the Command Window
+if nargin>3
+disp(title_str);
+end
+disp(T);
+end
+close all;
+
+end

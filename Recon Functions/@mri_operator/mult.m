@@ -1,0 +1,27 @@
+% Forward 3D Operator
+function y = mult(obj,x)
+
+    % Image domain multiply and FFT
+    nmaps = size(obj.maps,5);
+    ndims_x = ndims(x);
+    x = permute(x, [1:3,ndims_x+1,4:ndims_x]);
+    obj.maps = permute(obj.maps,[1:4,6:ndims_x+1,5]);
+    
+    x = x.*obj.maps;
+    % x=fft(x,[],1);
+    % x=fft(x,[],2);
+    % x=fft(x,[],3);
+    % x=x./sqrt(size(x,1));
+    x = 1/sqrt(size(x,1)*size(x,2)*size(x,3))*fft(fft(fft(x,[],1),[],2),[],3); 
+    if(nmaps == 2)
+        x = sum(x,ndims_x+1);
+    end
+    % Downsample
+    y = x(obj.mask_patterns);
+    % Weighted leas squares
+    if ~isempty(obj.mask_weights)
+        y = obj.mask_weights.*y;
+    end
+    
+
+end

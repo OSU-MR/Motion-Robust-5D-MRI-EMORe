@@ -1,0 +1,24 @@
+% Hermitian 3D Operator
+function x = At(y,mat_size,sen,ind_loc,w)
+
+    if nargin < 5 || isempty(w)
+        % 'w' is not given, initialize to ones
+        performWStep = false; % Flag to indicate whether to perform the step with 'w'
+    else
+        performWStep = true; % Flag to indicate that 'w' is given
+    end
+    if(performWStep)
+        y = w.*y;
+    end
+    x = accumarray(ind_loc,y(:),[prod(mat_size) 1]);
+    w_norm = accumarray(ind_loc,repmat(w,[size(w,1) 1 8 1]),[prod(mat_size) 1]);
+    % count = accumarray(ind_loc,1,[prod(mat_size) 1]);
+    % count(count==0) = inf;
+    % x = x./count;
+    x = reshape(x,mat_size);
+    % iFFT
+    x = ifft3_shift(x);  
+    x = x.*conj(sen);
+    x = squeeze(sum(x,4));
+
+end

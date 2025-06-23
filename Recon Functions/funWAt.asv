@@ -1,0 +1,18 @@
+% Adjoint operator
+function x = funWAt(y,samp,w)
+    if nargin < 3 || isempty(w)
+        % 'w' is not given, initialize to ones
+        performWStep = false; % Flag to indicate whether to perform the step with 'w'
+    else
+        performWStep = true; % Flag to indicate that 'w' is given
+    end
+    if(performWStep)
+        y=w.*y;
+    end
+if (isgpuarray(y))
+x=zeros(128,128,size(y,3),'g');
+for i=1:size(y,3)
+x(:,:,i)=(samp'*y(:,:,i)')';
+end
+x = ifft2r(x);
+end
