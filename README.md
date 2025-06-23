@@ -1,7 +1,7 @@
 # EMORe: Motion-Robust 5D MRI Reconstruction via Expectation-Maximization–Guided Binning Correction and Outlier Rejection
 
 [![DOI](https://img.shields.io/badge/DOI-10.1016/j.jocmr.2024.101509-blue)](https://doi.org/10.1016/j.jocmr.2024.101509)
-[![arXiv](https://img.shields.io/badge/arXiv-24XX.XXXXX-b31b1b.svg)](https://arxiv.org/abs/24XX.XXXXX) Official MATLAB implementation for the paper **EMORe: Motion-Robust 5D MRI Reconstruction via Expectation-Maximization–Guided Binning Correction and Outlier Rejection**, submitted to *IEEE Transactions on Medical Imaging (TMI)*.
+[![arXiv](https://img.shields.io/badge/arXiv-24XX.XXXXX-b31b1b.svg)](https://arxiv.org/abs/24XX.XXXXX) Official MATLAB implementation for the paper **EMORe: Motion-Robust 5D MRI Reconstruction via Expectation-Maximization–Guided Binning Correction and Outlier Rejection**.
 
 **Authors**: Syed M. Arshad, Lee C. Potter, Chong Chen, Preethi C. Subramanian, Yingmin Liu, Christopher Crabtree, Xuan Lei, Juliet Varghese, Matthew S. Tong, and Rizwan Ahmad
 
