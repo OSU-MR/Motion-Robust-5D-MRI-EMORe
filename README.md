@@ -1,7 +1,9 @@
 # EMORe: Motion-Robust 5D MRI Reconstruction via Expectation-Maximization–Guided Binning Correction and Outlier Rejection
 
 [![DOI](https://img.shields.io/badge/DOI-10.1016/j.jocmr.2024.101509-blue)](https://doi.org/10.1016/j.jocmr.2024.101509)
-[![arXiv](https://img.shields.io/badge/arXiv-24XX.XXXXX-b31b1b.svg)](https://arxiv.org/abs/24XX.XXXXX) Official MATLAB implementation for the paper **EMORe: Motion-Robust 5D MRI Reconstruction via Expectation-Maximization–Guided Binning Correction and Outlier Rejection**.
+[![arXiv](https://img.shields.io/badge/arXiv-24XX.XXXXX-b31b1b.svg)](https://arxiv.org/abs/24XX.XXXXX)
+
+Official MATLAB implementation for the paper **EMORe: Motion-Robust 5D MRI Reconstruction via Expectation-Maximization–Guided Binning Correction and Outlier Rejection**.
 
 **Authors**: Syed M. Arshad, Lee C. Potter, Chong Chen, Preethi C. Subramanian, Yingmin Liu, Christopher Crabtree, Xuan Lei, Juliet Varghese, Matthew S. Tong, and Rizwan Ahmad
 
@@ -36,10 +38,13 @@ If you use this code or the EMORe framework in your research, please cite our pa
   year={2025},
   publisher={Elsevier}
 }
-Repository Structure
+```
+
+### Repository Structure
 The repository is organized as follows:
 
-Github Repo For EMORe/
+```
+EMORe/
 │
 ├── Datasets/
 │   └── (Place your raw .mat data files here)
@@ -53,50 +58,64 @@ Github Repo For EMORe/
 │   └── (Output directory, created automatically)
 │
 └── mainRecon.m
-mainRecon.m: The main script to execute the entire reconstruction pipeline.
-Datasets/: Folder to store input raw data files (.mat).
-Recon Functions/: Contains the core reconstruction algorithms and all necessary helper functions.
-Recons/: The default output directory where all results will be saved.
-System Requirements
-Software:
-MATLAB (tested on R2022b or later)
-Parallel Computing Toolbox™ (for GPU acceleration)
-Hardware:
-An NVIDIA GPU with CUDA support is strongly recommended.
-Installation and Setup
-Clone the repository:
-Bash
+```
 
-git clone [https://github.com/your-username/EMORe-Recon.git](https://github.com/your-username/EMORe-Recon.git)
-Prepare Data: Place your raw .mat k-space data files into the Datasets/ folder.
-How to Run
-Open MATLAB.
-Navigate to the repository's root directory.
-Run the main script:
-Matlab
+-   **`mainRecon.m`**: The main script to execute the entire reconstruction pipeline.
+-   **`Datasets/`**: Folder to store input raw data files (`.mat`).
+-   **`Recon Functions/`**: Contains the core reconstruction algorithms and all necessary helper functions.
+-   **`Recons/`**: The default output directory where all results will be saved.
 
-mainRecon
-A dialog box will appear. Select the raw data file from the Datasets/ folder.
-If you have multiple GPUs, a prompt will appear to select one.
-The script will execute the full pipeline, displaying progress in the command window.
-Configuration Parameters
-All key reconstruction parameters can be adjusted in the Reconstruction Parameters section of mainRecon.m.
+### System Requirements
 
-Matlab
+#### Software:
+-   MATLAB (tested on R2022b or later)
+-   Parallel Computing Toolbox™ (for GPU acceleration)
 
+#### Hardware:
+-   An NVIDIA GPU with CUDA support is strongly recommended.
+
+### Installation and Setup
+
+1.  **Clone the repository:**
+    ```bash
+    git clone [https://github.com/your-username/EMORe-Recon.git](https://github.com/your-username/EMORe-Recon.git)
+    ```
+2.  **Prepare Data:** Place your raw `.mat` k-space data files into the `Datasets/` folder.
+
+### How to Run
+
+1.  Open MATLAB.
+2.  Navigate to the repository's root directory.
+3.  Run the main script from the MATLAB command window:
+    ```matlab
+    mainRecon
+    ```
+4.  A dialog box will appear. Select the raw data file from the `Datasets/` folder.
+5.  If you have multiple GPUs, a prompt will appear to select one.
+6.  The script will execute the full pipeline, displaying progress in the command window.
+
+### Configuration Parameters
+All key reconstruction parameters can be adjusted in the `Reconstruction Parameters` section of `mainRecon.m`.
+
+```matlab
 % Comparison flag
-opt.cs         = 1;                   % 1 = run CS recon; 0 = skip CS
+opt.cs         = 1;                    % 1 = run CS recon; 0 = skip CS
+
 % ADMM tuning
 opt.lam        = 5e-4 .* [1 1 1 5 3];  % [λ_sx, λ_sy, λ_sz, λ_c, λ_r]
-opt.gStp       = 4e-2;                % gradient step size (γ)
-opt.mu         = 5e-1;                % Lagrange multiplier (μ)
-% EMORe priors
-opt.out_factor = 0.05;                % α_o (outlier prior)
-opt.sg_factor  = 0.85;                % α_g (self‐gating prior)
-% ... and others
-Expected Output
-A unique, timestamped directory will be created inside Recons/<dataset_name>/, containing:
+opt.gStp       = 4e-2;                 % gradient step size (γ)
+opt.mu         = 5e-1;                 % Lagrange multiplier (μ)
 
-params/: .mat files with final images and a .txt log file.
-gif/: GIFs of the reconstructed image series.
-outliers/: Plots showing signal traces and outlier rejection.
+% EMORe priors
+opt.out_factor = 0.05;                  % α_o (outlier prior)
+opt.sg_factor  = 0.85;                  % α_g (self‐gating prior)
+
+% ... and others
+```
+
+### Expected Output
+A unique, timestamped directory will be created inside `Recons/<dataset_name>/`, containing:
+
+-   **`params/`**: `.mat` files with final images and a `.txt` log file.
+-   **`gif/`**: GIFs of the reconstructed image series.
+-   **`outliers/`**: Plots showing signal traces and outlier rejection.
