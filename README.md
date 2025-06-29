@@ -83,9 +83,9 @@ EMORe/
     ```
 2.  **Download Sample Data:** Download the sample *in vivo* dataset from Zenodo:
     - **Link:** [https://zenodo.org/records/15769665](https://zenodo.org/records/15769665)
-    - Download the `dataset_invivo.mat` file.
+    - Download the `volunteer1.mat` file.
 
-3.  **Prepare Data:** Place the downloaded `dataset_invivo.mat` file (or your own `.mat` files) into the `Datasets/` folder.
+3.  **Prepare Data:** Place the downloaded `volunteer1.mat` file (or your own `.mat` files) into the `Datasets/` folder.
 
 ### How to Run
 
