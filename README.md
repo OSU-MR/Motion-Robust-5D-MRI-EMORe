@@ -27,7 +27,7 @@ Official MATLAB implementation for the paper **EMORe: Motion-Robust 5D MRI Recon
 We propose EMORe, an adaptive reconstruction method designed to enhance motion robustness in free-running, free-breathing self-gated 5D cardiac magnetic resonance imaging (MRI). Traditional self-gating-based motion binning for 5D MRI often results in residual motion artifacts due to inaccuracies in cardiac and respiratory signal extraction and sporadic bulk motion, compromising clinical utility. EMORe addresses these issues by integrating adaptive inter-bin correction and explicit outlier rejection within an expectation-maximization (EM) framework, whereby the E-step and M-step are executed alternately until convergence. In the E-step, probabilistic (soft) bin assignments are refined by correcting misassignment of valid data and rejecting motion-corrupted data to a dedicated outlier bin. In the M-step, the image estimate is improved using the refined soft bin assignments. Validation in a simulated 5D MRXCAT phantom and in vivo volunteers confirmed EMORe's robustness, significantly enhancing image quality and reducing motion artifacts compared to standard compressed sensing. Although EMORe incurs a modest increase in computational complexity, its adaptability and robust handling of bulk motion artifacts significantly enhance the clinical applicability and diagnostic confidence of 5D cardiac MRI.
 
 ### Citation
-If you use this code or the EMORe framework in your research, please cite our paper:
+If you use this code or the EMORe framework in your research, please cite published peer-reviewed abstract (presented at SCMR'25):
 
 ```bibtex
 @article{arshad2025emore,
