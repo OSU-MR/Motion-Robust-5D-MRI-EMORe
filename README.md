@@ -119,7 +119,7 @@ opt.sg_factor  = 0.85;                  % α_g (self‐gating prior)
 ```
 
 ### Expected Output
-A unique, timestamped directory will be created inside `Recons/dataset_invivo/`, containing:
+A unique, timestamped directory will be created inside `Recons/volunteer1/`, containing:
 
 -   **`params/`**: `.mat` files with final images and a `.txt` log file.
 -   **`gif/`**: GIFs of the reconstructed image series.
