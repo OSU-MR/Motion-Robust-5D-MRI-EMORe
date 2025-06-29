@@ -2,6 +2,7 @@
 
 [![DOI](https://img.shields.io/badge/DOI-10.1016/j.jocmr.2024.101509-blue)](https://doi.org/10.1016/j.jocmr.2024.101509)
 [![arXiv](https://img.shields.io/badge/arXiv-24XX.XXXXX-b31b1b.svg)](https://arxiv.org/abs/24XX.XXXXX)
+[![Zenodo](https://img.shields.io/badge/DOI-10.5281/zenodo.15769665-blue)](https://zenodo.org/records/15769665)
 
 Official MATLAB implementation for the paper **EMORe: Motion-Robust 5D MRI Reconstruction via Expectation-Maximization–Guided Binning Correction and Outlier Rejection**.
 
@@ -47,8 +48,7 @@ The repository is organized as follows:
 EMORe/
 │
 ├── Datasets/
-│   └── (Place your raw .mat data files here, you can download [the sample dataset from here:https://zenodo.org/records/15769665](https://zenodo.org/records/15769665)
-)
+│   └── (Place your raw .mat data files here)
 │
 ├── Recon Functions/
 │   ├── runEMOReRecon.m
@@ -81,7 +81,11 @@ EMORe/
     ```bash
     git clone [https://github.com/your-username/EMORe-Recon.git](https://github.com/your-username/EMORe-Recon.git)
     ```
-2.  **Prepare Data:** Place your raw `.mat` k-space data files into the `Datasets/` folder.
+2.  **Download Sample Data:** Download the sample *in vivo* dataset from Zenodo:
+    - **Link:** [https://zenodo.org/records/15769665](https://zenodo.org/records/15769665)
+    - Download the `dataset_invivo.mat` file.
+
+3.  **Prepare Data:** Place the downloaded `dataset_invivo.mat` file (or your own `.mat` files) into the `Datasets/` folder.
 
 ### How to Run
 
@@ -91,7 +95,7 @@ EMORe/
     ```matlab
     mainRecon
     ```
-4.  A dialog box will appear. Select the raw data file from the `Datasets/` folder.
+4.  A dialog box will appear. Select the `dataset_invivo.mat` file from the `Datasets/` folder.
 5.  If you have multiple GPUs, a prompt will appear to select one.
 6.  The script will execute the full pipeline, displaying progress in the command window.
 
@@ -115,7 +119,7 @@ opt.sg_factor  = 0.85;                  % α_g (self‐gating prior)
 ```
 
 ### Expected Output
-A unique, timestamped directory will be created inside `Recons/<dataset_name>/`, containing:
+A unique, timestamped directory will be created inside `Recons/dataset_invivo/`, containing:
 
 -   **`params/`**: `.mat` files with final images and a `.txt` log file.
 -   **`gif/`**: GIFs of the reconstructed image series.
