@@ -47,7 +47,8 @@ The repository is organized as follows:
 EMORe/
 │
 ├── Datasets/
-│   └── (Place your raw .mat data files here)
+│   └── (Place your raw .mat data files here, you can download [the sample dataset from here:https://zenodo.org/records/15769665](https://zenodo.org/records/15769665)
+)
 │
 ├── Recon Functions/
 │   ├── runEMOReRecon.m
