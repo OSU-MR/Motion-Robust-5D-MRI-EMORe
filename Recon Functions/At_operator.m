@@ -1,5 +1,5 @@
 % Hermitian 3D Operator
-function x = At(y,mat_size,sen,lin_ind,w)
+function x = At_operator(y,mat_size,sen,lin_ind,w)
 
     if nargin < 5 || isempty(w)
         % 'w' is not given, initialize to ones

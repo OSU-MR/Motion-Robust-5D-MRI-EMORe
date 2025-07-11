@@ -51,10 +51,11 @@ function [x_cs, cost_cs] = runCSRecon(y, x0, sens, w_init, y_ind, ...
     x = gpuArray(repmat(x0,[1 1 1 20 4])); % Replicate initial image for all cardiac/respiratory bins
     gradA = zeros(size(x),'like',y);      % Pre-allocate gradient of the data fidelity term
     x = x./opt.scale;                     % Scale initial image estimate
-
+    L = size(y,1)*size(y,3);                         % L: Collective length of a readout from all coils
+    sig_sq = opt.sig_scl.^2;               % σ^2 Noise variance 
     % Define forward (A) and adjoint (At) operators as function handles.
-    at = @(y,w) At(y,mat_size(1:4),sens,y_ind,w);
-    a  = @(x,w) A(x,[mat_size(1:4),1,1],sens,PE_lin_ind,w);
+    At = @(y,w) At_operator(y,mat_size(1:4),sens,y_ind,w);
+    A  = @(x,w) A_operator(x,[mat_size(1:4),1,1],sens,PE_lin_ind,w);
     
     % Initialize auxiliary variables 'd' and 'b' for the ADMM solver.
     d = zeros([dims,n_dims],'like',y); % Split-Bregman variable for TV
@@ -86,7 +87,7 @@ function [x_cs, cost_cs] = runCSRecon(y, x0, sens, w_init, y_ind, ...
             for c = 1:4 
                 % Calculate the gradient of the data fidelity term for all motion bins.
                 for j=1:size(x(:,:,:,:),4)
-                    gradA(:,:,:,j) =  at(a(x(:,:,:,j),w(:,:,:,j))- (w(:,:,:,j).*y),w(:,:,:,j));
+                    gradA(:,:,:,j) =  (1./(L.*sig_sq)).*At(A(x(:,:,:,j),w(:,:,:,j))- (w(:,:,:,j).*y),w(:,:,:,j));
                 end
                 % Calculate the gradient of the TV regularization term.
                 gradT = opt.mu.* adjTV(TV(x,dims)-d+b,dims);
@@ -105,7 +106,7 @@ function [x_cs, cost_cs] = runCSRecon(y, x0, sens, w_init, y_ind, ...
             % --- LOGGING AND CONVERGENCE CHECK ---
             % Periodically display and log progress.
             if(mod(i,opt.vrb)==0 || i==1)
-                cost_cs_ax(i) = round(0.5.*norm(gradA(:)).^2);
+                cost_cs_ax(i) = round((1./(L.*sig_sq)).*norm((L.*sig_sq).*gradA(:)).^2);
                 cost_cs_tv(i) = round(sum(opt.lam.*sum(abs(reshape(tvx,[],n_dims)),1)));
                 cost_cs(i) = cost_cs_ax(i)+cost_cs_tv(i);
     
@@ -125,16 +126,6 @@ function [x_cs, cost_cs] = runCSRecon(y, x0, sens, w_init, y_ind, ...
     % Stop timer and log the final results.
     t_cs = toc(t1)./60; % Total reconstruction time in minutes
     
-    % Recalculate cost for the final iteration.
-    cost_cs_ax(i) = round(0.5.*norm(gradA(:)).^2);
-    cost_cs_tv(i) = round(sum(opt.lam.*sum(abs(reshape(tvx,[],n_dims)),1)));
-    cost_cs(i) = cost_cs_ax(i)+cost_cs_tv(i);
-    
-    % Form and log the final message.
-    logMessage = sprintf('CS Iter %d Time/iter(s) = %.2f Cost: %d Cost ax: %d Cost tv: %d Diff: %.4f', ...
-        i, toc(t2), cost_cs(i),cost_cs_ax(i),cost_cs_tv(i), norm_diff_xcs);
-    disp(logMessage);
-    fprintf(fid, '%s\n', logMessage);
     logMessage = sprintf('CS is completed in %.2f mins %s', t_cs,datestr8601([],'*ymdHMS'));
     disp(logMessage);
     fprintf(fid, '%s\n', logMessage);    

@@ -23,6 +23,8 @@
 
 %% --- Setup and Paths ----------------------------------------------------
 addpath(genpath('./Recon Functions/'));   % include all helper functions
+addpath(genpath('./Methods/'));   % include all helper functions
+
 close all;
 clear;
 
@@ -50,9 +52,9 @@ disp("  Setting reconstruction parameters (see manuscript for details)...");
 opt.cs         = 1;                   % 1 = run CS recon; 0 = skip CS
 
 % ADMM tuning
-opt.lam        = 5e-4 .* [1 1 1 5 3];  % [λ_sx, λ_sy, λ_sz, λ_c, λ_r]
-opt.gStp       = 4e-2;                % gradient step size (γ)
-opt.mu         = 5e-1;                % Lagrange multiplier (μ)
+opt.lam        = 2e-2 .* [1 1 1 5 3];  % [λ_sx, λ_sy, λ_sz, λ_c, λ_r]
+opt.gStp       = 1e-3;                % gradient step size (γ)
+opt.mu         = 20;                % Lagrange multiplier (μ)
 
 % EMORe priors
 opt.out_factor = 0.05;                % α_o (outlier prior)
@@ -67,8 +69,8 @@ opt.csIter      = 240;                 % Max CS iterations (J)
 
 
 % Outlier threshold & noise level
-opt.tau        = 3;                   % τ (outlier threshold)
-opt.sig        = 1e-5;                % σ (noise std; data pre‐scaled)
+opt.tau_factor        = 3;                   % τ-factor (τ/σ) (outlier threshold)
+opt.sig               = 1e-5;                % σ (noise std; data pre‐scaled)
 
 % Convergence
 opt.thresh     = 1e-4;                % η (convergence criterion)
@@ -86,8 +88,8 @@ opt.nc         = 8;                   % # coils post‐compression
 opt.rBPF       = [0.02, 0.5];         % resp. bandpass [Hz]
 opt.cBPF       = [0.5,  3.5];         % card. bandpass [Hz]
 
-% Readout cropping (% from top, bottom)
-opt.crop       = [0.50, 0.40];        % e.g. [0,0]=no crop; [0.25,0.25]=50% total
+% Readout cropping (% from top, bottom) e.g. [0,0]=no crop; [0.25,0.25]=50% total
+opt.crop       = [0.40, 0.35];        % used for Volunteer#1
 
 disp("  Parameters configured:");
 disp(opt);

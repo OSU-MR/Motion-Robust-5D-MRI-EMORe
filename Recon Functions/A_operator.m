@@ -1,5 +1,5 @@
 % Forward 3D Operator
-function y = A(x,mat_size,maps,PE_lin_ind,w)
+function y = A_operator(x,mat_size,maps,PE_lin_ind,w)
     if nargin < 5 || isempty(w)
         % 'w' is not given, initialize to ones
         performWStep = false; % Flag to indicate whether to perform the step with 'w'
