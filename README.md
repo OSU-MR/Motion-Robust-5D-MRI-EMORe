@@ -1,7 +1,7 @@
 # EMORe: Motion-Robust 5D MRI Reconstruction via Expectation-Maximization–Guided Binning Correction and Outlier Rejection
 
 [![DOI](https://img.shields.io/badge/DOI-10.1016/j.jocmr.2024.101509-blue)](https://doi.org/10.1016/j.jocmr.2024.101509)
-[![arXiv](https://img.shields.io/badge/arXiv-24XX.XXXXX-b31b1b.svg)](https://arxiv.org/abs/24XX.XXXXX)
+[![arXiv](https://img.shields.io/badge/arXiv-2507.23224-b31b1b.svg)](https://doi.org/10.48550/arXiv.2507.23224)
 [![Zenodo](https://img.shields.io/badge/DOI-10.5281/zenodo.15769665-blue)](https://zenodo.org/records/15769665)
 
 Official MATLAB implementation for the paper **EMORe: Motion-Robust 5D MRI Reconstruction via Expectation-Maximization–Guided Binning Correction and Outlier Rejection**.
