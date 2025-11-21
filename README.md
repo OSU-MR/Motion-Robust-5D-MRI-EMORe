@@ -7,7 +7,7 @@
 <p align="center">
   <img src="https://github.com/user-attachments/assets/789957f3-f94c-4437-9dfc-f0b7f837046d" width="70%">
 </p>
-Official MATLAB implementation for the paper **EMORe: Motion-Robust 5D MRI Reconstruction via Expectation-Maximization–Guided Binning Correction and Outlier Rejection**.
+Official MATLAB implementation for the paper "EMORe: Motion-Robust 5D MRI Reconstruction via Expectation-Maximization–Guided Binning Correction and Outlier Rejection".
 
 **Authors**: Syed M. Arshad, Lee C. Potter, Chong Chen, Preethi C. Subramanian, Yingmin Liu, Christopher Crabtree, Xuan Lei, Juliet Varghese, Matthew S. Tong, and Rizwan Ahmad
 
