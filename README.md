@@ -5,7 +5,7 @@
 [![Zenodo](https://img.shields.io/badge/DOI-10.5281/zenodo.15769665-blue)](https://zenodo.org/records/15769665)
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/4ff5109c-0f2a-48b8-9b84-90d60c9de400" width="90%">
+  <img src="https://github.com/user-attachments/assets/54fae0d9-217f-4e80-836d-2dc06cad5db3" width="90%">
 </p>
 
 Official MATLAB implementation for the paper **EMORe: Motion-Robust 5D MRI Reconstruction via Expectation-Maximization–Guided Binning Correction and Outlier Rejection**.
