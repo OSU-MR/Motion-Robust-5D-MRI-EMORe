@@ -32,12 +32,10 @@ If you use this code or the EMORe framework in your research, please cite publis
 
 ```bibtex
 @article{arshad2025emore,
-  title={EMORe: motion-robust XD-CMR reconstruction using expectation-maximization (EM) algorithm},
-  author={Arshad, Syed Murtaza and Potter, Lee C and Lei, Xuan and Ahmad, Rizwan},
-  journal={Journal of Cardiovascular Magnetic Resonance},
-  volume={27},
-  year={2025},
-  publisher={Elsevier}
+  title={EMORe: Motion-Robust 5D MRI Reconstruction via Expectation-Maximization-Guided Binning Correction and Outlier Rejection},
+  author={Arshad, Syed M and Potter, Lee C and Liu, Yingmin and Crabtree, Christopher and Tong, Matthew S and Ahmad, Rizwan},
+  journal={arXiv preprint arXiv:2507.23224},
+  year={2025}
 }
 ```
 
@@ -50,10 +48,12 @@ EMORe/
 ├── Datasets/
 │   └── (Place your raw .mat data files here)
 │
-├── Recon Functions/
+├── Methods/
 │   ├── runEMOReRecon.m
-│   ├── runCSRecon.m
-│   └── (Other helper functions for SG, binning, ADMM, etc.)
+│   └── runCSRecon.m
+│
+├── Recon Functions/
+│   └── Helper functions for SG, binning, ADMM, etc.
 │
 ├── Recons/
 │   └── (Output directory, created automatically)
