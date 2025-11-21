@@ -98,7 +98,7 @@ EMORe/
     ```matlab
     mainRecon
     ```
-4.  A dialog box will appear. Select the `dataset_invivo.mat` file from the `Datasets/` folder.
+4.  A dialog box will appear. Select the `volunteer1.mat` file from the `Datasets/` folder.
 5.  If you have multiple GPUs, a prompt will appear to select one.
 6.  The script will execute the full pipeline, displaying progress in the command window.
 
