@@ -56,7 +56,7 @@ EMORe/
 │   └── runCSRecon.m
 │
 ├── Recon Functions/
-│   └── Helper functions for SG, binning, ADMM, etc.
+│   └── Helper functions for SG, binning, coil maps, etc.
 │
 ├── Recons/
 │   └── (Output directory, created automatically)
