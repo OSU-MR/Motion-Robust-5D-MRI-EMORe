@@ -80,9 +80,9 @@ EMORe/
 
 ### Installation and Setup
 
-1.  **Clone the repository:**
+1. **Clone the repository:**
     ```bash
-    git clone [https://github.com/your-username/EMORe-Recon.git](https://github.com/your-username/EMORe-Recon.git)
+    git clone https://github.com/OSU-MR/Motion-Robust-5D-MRI-EMORe.git
     ```
 2.  **Download Sample Data:** Download the sample *in vivo* dataset from Zenodo:
     - **Link:** [https://zenodo.org/records/15769665](https://zenodo.org/records/15769665)
